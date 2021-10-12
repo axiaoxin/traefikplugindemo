@@ -1,0 +1,21 @@
+# http routing section
+[http]
+  [http.routers]
+     # Define a connection between requests and services
+     [http.routers.myserver]
+      rule = "Host(`myserver.local`)"
+      # If the rule matches, applies the middleware
+      middlewares = ["axiaoxin-middleware"]
+      # If the rule matches, forward to the myserver service (declared below)
+      service = "myserver"
+
+  [http.middlewares]
+    [http.middlewares.axiaoxin-middleware.plugin.axiaoxin-traefik-plugin-demo]
+        ValueStrCase = "snake"
+        DefaultValue = "axiaoxin"
+
+  [http.services]
+    # Define how to reach an existing service on our infrastructure
+    [http.services.myserver.loadBalancer]
+      [[http.services.myserver.loadBalancer.servers]]
+        url = "http://localhost:8000"
